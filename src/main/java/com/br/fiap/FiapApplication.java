@@ -6,10 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 
 import com.br.fiap.cliente.ClienteFront;
 import com.br.fiap.vendedor.VendedorFront;
 
+@EnableFeignClients
 @SpringBootApplication
 public class FiapApplication implements CommandLineRunner {
 	
