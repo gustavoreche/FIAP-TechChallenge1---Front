@@ -1,14 +1,19 @@
 package com.br.fiap.integracao;
 
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 
-import com.br.fiap.cliente.FiltroDeBuscaDTO;
+import com.br.fiap.cliente.CadastroClienteDTO;
 
-@FeignClient("backend")
+import feign.Headers;
+
+@FeignClient(name = "backend", url = "http://localhost:8080")
 public interface BackendClient {
 	
-	@GetMapping(value = "/stores")
-    Boolean isValidForm(FiltroDeBuscaDTO filtros);
+	@PostMapping(value = "/cliente")
+	@Headers("localAcessado: {localAcessado}")
+    void cadastraCliente(CadastroClienteDTO request,
+    		@RequestHeader("localAcessado") String localAcessado);
 
 }
