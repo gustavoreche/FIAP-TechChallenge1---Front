@@ -34,8 +34,9 @@ public class ClienteFront {
 				System.out.println("""
 						Você foi inserido no sistema. Aguarde um de nossos vendedores entrar em contato. 
 						Muito obrigado!!
+						-------------------------------------------------------------------------------------
 						""");
-				System.exit(0);
+				repeteFormulario = false;
 			} else if(opcaoDigitada.equals("2")) {
 				this.filtrosDeBuscaDoVeiculo("estande");
 				this.mensagemCadastroComSucesso();
@@ -53,28 +54,29 @@ public class ClienteFront {
 	}
 	
 	private void filtrosDeBuscaDoVeiculo(String localAcessado) {
+		var entrada = new Scanner(System.in);
+		System.out.println("""
+				-----------------------------------------------------------
+				Digite os filtros de busca do carro que você deseja:
+				""");
+		System.out.print("Digite o ANO do carro ou aperte ENTER caso não seja prioridade. Exemplo: 2020, 2016: ");
+		var opcaoDigitada = entrada.nextLine();
+		var ano = opcaoDigitada;
+		System.out.print("Digite o MODELO do carro ou aperte ENTER caso não seja prioridade. Exemplo: Onix, Gol: ");
+		opcaoDigitada = entrada.nextLine();
+		var modelo = opcaoDigitada;
+		System.out.print("Digite a CATEGORIA ano do carro ou aperte ENTER caso não seja prioridade. Exemplo: SUV, Sedan: ");
+		opcaoDigitada = entrada.nextLine();
+		var categoria = opcaoDigitada;
+		System.out.println("""
+				Os filtros selecionados são:
+					ano: %s
+					modelo: %s
+					categoria: %s
+				""".formatted(ano, modelo, categoria));
+		
 		var repeteFormulario = true;
 		while(repeteFormulario) {
-			var entrada = new Scanner(System.in);
-			System.out.println("""
-					-----------------------------------------------------------
-					Digite os filtros de busca do carro que você deseja:
-					""");
-			System.out.print("Digite o ANO do carro ou aperte ENTER caso não seja prioridade. Exemplo: 2020, 2016: ");
-			var opcaoDigitada = entrada.nextLine();
-			var ano = opcaoDigitada;
-			System.out.print("Digite o MODELO do carro ou aperte ENTER caso não seja prioridade. Exemplo: Onix, Gol: ");
-			opcaoDigitada = entrada.nextLine();
-			var modelo = opcaoDigitada;
-			System.out.print("Digite a CATEGORIA ano do carro ou aperte ENTER caso não seja prioridade. Exemplo: SUV, Sedan: ");
-			opcaoDigitada = entrada.nextLine();
-			var categoria = opcaoDigitada;
-			System.out.println("""
-					Os filtros selecionados são:
-						ano: %s
-						modelo: %s
-						categoria: %s
-					""".formatted(ano, modelo, categoria));
 			System.out.println("""
 					-----------------------------------------------------------
 					Agora preencha algumas informações sobre você:
