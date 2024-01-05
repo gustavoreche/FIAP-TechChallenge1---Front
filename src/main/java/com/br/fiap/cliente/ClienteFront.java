@@ -159,42 +159,6 @@ public class ClienteFront {
 							""".formatted(e.getMessage()));
 		}
 		
-//		var repeteFormulario = true;
-//		while(repeteFormulario) {
-//			System.out.println("""
-//					-----------------------------------------------------------
-//					Agora preencha algumas informações sobre você:
-//					""");
-//			System.out.print("Digite seu NOME: ");
-//			opcaoDigitada = entrada.nextLine();
-//			var nome = opcaoDigitada;
-//			System.out.print("Digite seu TELEFONE. Exemplo: 16911223344: ");
-//			opcaoDigitada = entrada.nextLine();
-//			var telefone = opcaoDigitada;
-//			System.out.print("Digite seu EMAIL: ");
-//			opcaoDigitada = entrada.nextLine();
-//			var email = opcaoDigitada;
-//			var cadastroCliente = new CadastroClienteDTO(
-//					nome, telefone, email, ano, modelo, categoria
-//					);
-//			try {
-//				this.client.cadastraCliente(cadastroCliente, "");
-//				repeteFormulario = false;
-//			} catch (FeignException e) {
-//				if(e.status() == HttpStatus.BAD_REQUEST.value()) {
-//					System.out.println("""
-//					!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-//					CADASTRO NÃO REALIZADO.
-//					
-//					Motivo: %s
-//					
-//					Tente novamente
-//					!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-//							""".formatted(e.getMessage()));
-//				}
-//			}
-//		}
-		
 	}
 
 }
