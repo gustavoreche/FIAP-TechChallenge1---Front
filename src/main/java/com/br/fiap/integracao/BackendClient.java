@@ -23,6 +23,6 @@ public interface BackendClient {
 	ClienteNaFilaDTO proximoClienteDaFila();
 	
 	@PostMapping(value = "/vendedor/registra-atendimento")
-	ClienteNaFilaDTO registraAtendimento(AtendimentoDTO request);
+	void registraAtendimento(AtendimentoDTO request);
 
 }
