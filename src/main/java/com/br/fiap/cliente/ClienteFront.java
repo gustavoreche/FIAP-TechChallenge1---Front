@@ -16,6 +16,8 @@ public class ClienteFront {
 	@Autowired
 	private BackendClient client;
 	
+	private CadastroClienteDTO cadastroCliente;
+	
 	public void executa() {
 		System.out.println("""
 				------------------------------------------------------------------------
@@ -91,7 +93,7 @@ public class ClienteFront {
 			System.out.print("Digite seu EMAIL: ");
 			opcaoDigitada = entrada.nextLine();
 			var email = opcaoDigitada;
-			var cadastroCliente = new CadastroClienteDTO(
+			this.cadastroCliente = new CadastroClienteDTO(
 					nome, telefone, email, ano, modelo, categoria
 					);
 			try {
@@ -138,6 +140,25 @@ public class ClienteFront {
 				Como você esta no ESTANDE de veículos, o VENDEDOR irá te atender. Aguarde...
 				-----------------------------------------------------------------------------------
 				""");
+		//TODO: Registro do atendimento pelo vendedor pelo ESTANDE
+		try {
+			this.client.registraAtendimento(new AtendimentoDTO("vendedor do ESTANDE", this.cadastroCliente), "site");
+			System.out.println("""
+					!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+					ATENDIMENTO registrado!!
+					!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+					""");
+		} catch (FeignException e) {
+			System.out.println("""
+					!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+					REGISTRO DE ATENDIMENTO NÃO REALIZADO
+					
+					Motivo: %s
+					
+					CONTATE UM ADMINISTRADOR DO SISTEMA
+					!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+							""".formatted(e.getMessage()));
+		}
 		
 //		var repeteFormulario = true;
 //		while(repeteFormulario) {
