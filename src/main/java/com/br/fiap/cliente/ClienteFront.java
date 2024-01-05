@@ -140,7 +140,6 @@ public class ClienteFront {
 				Como você esta no ESTANDE de veículos, o VENDEDOR irá te atender. Aguarde...
 				-----------------------------------------------------------------------------------
 				""");
-		//TODO: Registro do atendimento pelo vendedor pelo ESTANDE
 		try {
 			this.client.registraAtendimento(new AtendimentoDTO("vendedor do ESTANDE", this.cadastroCliente), "site");
 			System.out.println("""
