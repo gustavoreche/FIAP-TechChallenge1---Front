@@ -81,7 +81,7 @@ public class VendedorFront {
 					var nome = entrada.nextLine();
 					
 					try {
-						this.client.registraAtendimento(new AtendimentoDTO(nome, proximoClienteNaFila.converteEmCadastro()));
+						this.client.registraAtendimento(new AtendimentoDTO(nome, proximoClienteNaFila.converteEmCadastro()), "estande");
 						System.out.println("""
 								!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 								ATENDIMENTO registrado!!

@@ -16,6 +16,8 @@ public class ClienteFront {
 	@Autowired
 	private BackendClient client;
 	
+	private CadastroClienteDTO cadastroCliente;
+	
 	public void executa() {
 		System.out.println("""
 				------------------------------------------------------------------------
@@ -91,7 +93,7 @@ public class ClienteFront {
 			System.out.print("Digite seu EMAIL: ");
 			opcaoDigitada = entrada.nextLine();
 			var email = opcaoDigitada;
-			var cadastroCliente = new CadastroClienteDTO(
+			this.cadastroCliente = new CadastroClienteDTO(
 					nome, telefone, email, ano, modelo, categoria
 					);
 			try {
@@ -138,42 +140,24 @@ public class ClienteFront {
 				Como você esta no ESTANDE de veículos, o VENDEDOR irá te atender. Aguarde...
 				-----------------------------------------------------------------------------------
 				""");
-		
-//		var repeteFormulario = true;
-//		while(repeteFormulario) {
-//			System.out.println("""
-//					-----------------------------------------------------------
-//					Agora preencha algumas informações sobre você:
-//					""");
-//			System.out.print("Digite seu NOME: ");
-//			opcaoDigitada = entrada.nextLine();
-//			var nome = opcaoDigitada;
-//			System.out.print("Digite seu TELEFONE. Exemplo: 16911223344: ");
-//			opcaoDigitada = entrada.nextLine();
-//			var telefone = opcaoDigitada;
-//			System.out.print("Digite seu EMAIL: ");
-//			opcaoDigitada = entrada.nextLine();
-//			var email = opcaoDigitada;
-//			var cadastroCliente = new CadastroClienteDTO(
-//					nome, telefone, email, ano, modelo, categoria
-//					);
-//			try {
-//				this.client.cadastraCliente(cadastroCliente, "");
-//				repeteFormulario = false;
-//			} catch (FeignException e) {
-//				if(e.status() == HttpStatus.BAD_REQUEST.value()) {
-//					System.out.println("""
-//					!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-//					CADASTRO NÃO REALIZADO.
-//					
-//					Motivo: %s
-//					
-//					Tente novamente
-//					!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-//							""".formatted(e.getMessage()));
-//				}
-//			}
-//		}
+		try {
+			this.client.registraAtendimento(new AtendimentoDTO("vendedor do ESTANDE", this.cadastroCliente), "site");
+			System.out.println("""
+					!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+					ATENDIMENTO registrado!!
+					!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+					""");
+		} catch (FeignException e) {
+			System.out.println("""
+					!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+					REGISTRO DE ATENDIMENTO NÃO REALIZADO
+					
+					Motivo: %s
+					
+					CONTATE UM ADMINISTRADOR DO SISTEMA
+					!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+							""".formatted(e.getMessage()));
+		}
 		
 	}
 
