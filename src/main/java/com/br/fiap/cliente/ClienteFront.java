@@ -40,6 +40,7 @@ public class ClienteFront {
 			} else if(opcaoDigitada.equals("2")) {
 				this.filtrosDeBuscaDoVeiculo("estande");
 				this.mensagemCadastroComSucesso();
+				this.inicioDoAtendimentoPeloVendedor();
 				repeteFormulario = false;
 				//TODO: Realizar logica de solicitacao de valores
 			} else {
@@ -107,6 +108,16 @@ public class ClienteFront {
 					Tente novamente
 					!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 							""".formatted(e.getMessage()));
+				} else {
+					System.out.println("""
+							!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+							CADASTRO NÃO REALIZADO.
+							
+							Motivo: %s
+							
+							CONTATE UM ADMINISTRADOR DO SISTEMA
+							!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+									""".formatted(e.getMessage()));
 				}
 			}
 		}
@@ -119,6 +130,51 @@ public class ClienteFront {
 				CADASTRO REALIZADO COM SUCESSO!!
 				------------------------------------------
 				""");
+	}
+	
+	private void inicioDoAtendimentoPeloVendedor() {
+		var entrada = new Scanner(System.in);
+		System.out.println("""
+				Como você esta no ESTANDE de veículos, o VENDEDOR irá te atender. Aguarde...
+				-----------------------------------------------------------------------------------
+				""");
+		
+//		var repeteFormulario = true;
+//		while(repeteFormulario) {
+//			System.out.println("""
+//					-----------------------------------------------------------
+//					Agora preencha algumas informações sobre você:
+//					""");
+//			System.out.print("Digite seu NOME: ");
+//			opcaoDigitada = entrada.nextLine();
+//			var nome = opcaoDigitada;
+//			System.out.print("Digite seu TELEFONE. Exemplo: 16911223344: ");
+//			opcaoDigitada = entrada.nextLine();
+//			var telefone = opcaoDigitada;
+//			System.out.print("Digite seu EMAIL: ");
+//			opcaoDigitada = entrada.nextLine();
+//			var email = opcaoDigitada;
+//			var cadastroCliente = new CadastroClienteDTO(
+//					nome, telefone, email, ano, modelo, categoria
+//					);
+//			try {
+//				this.client.cadastraCliente(cadastroCliente, "");
+//				repeteFormulario = false;
+//			} catch (FeignException e) {
+//				if(e.status() == HttpStatus.BAD_REQUEST.value()) {
+//					System.out.println("""
+//					!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//					CADASTRO NÃO REALIZADO.
+//					
+//					Motivo: %s
+//					
+//					Tente novamente
+//					!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//							""".formatted(e.getMessage()));
+//				}
+//			}
+//		}
+		
 	}
 
 }
