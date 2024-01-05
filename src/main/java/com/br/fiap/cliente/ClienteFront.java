@@ -141,7 +141,7 @@ public class ClienteFront {
 				-----------------------------------------------------------------------------------
 				""");
 		try {
-			this.client.registraAtendimento(new AtendimentoDTO("vendedor do ESTANDE", this.cadastroCliente), "site");
+			this.client.registraAtendimento(new AtendimentoDTO("vendedor do ESTANDE", this.cadastroCliente), "ESTANDE");
 			System.out.println("""
 					!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 					ATENDIMENTO registrado!!
