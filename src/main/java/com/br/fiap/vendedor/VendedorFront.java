@@ -30,6 +30,7 @@ public class VendedorFront {
 				para que você possa dar início ao atendimento do cliente...
 				==========================================================================================
 				""");
+		tempoDeEspera();
 		ClienteNaFilaDTO proximoClienteNaFila = null;
 		try {
 			proximoClienteNaFila = this.client.proximoClienteDaFila();
@@ -81,7 +82,7 @@ public class VendedorFront {
 					var nome = entrada.nextLine();
 					
 					try {
-						this.client.registraAtendimento(new AtendimentoDTO(nome, proximoClienteNaFila.converteEmCadastro()), "estande");
+						this.client.registraAtendimento(new AtendimentoDTO(nome, proximoClienteNaFila.converteEmCadastro()), "SITE");
 						System.out.println("""
 								!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 								ATENDIMENTO registrado!!
@@ -119,6 +120,14 @@ public class VendedorFront {
 			}
 		}
 		
+	}
+
+	private void tempoDeEspera() {
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e1) {
+			e1.printStackTrace();
+		}
 	}
 
 }
