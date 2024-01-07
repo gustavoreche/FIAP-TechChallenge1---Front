@@ -23,10 +23,10 @@ public class VendedorFront {
 				==========================================================================================
 				Bem vindo VENDEDOR!!
 				
-				Simulando que o VENDEDOR esteja acessando o CRM...
+				Simulando que o VENDEDOR esteja acessando o atendimento pelo SITE...
 				
 				==========================================================================================
-				Estamos verificando se existe algum CLIENTE que acessou via SITE e foi para o CRM,
+				Estamos verificando se existe algum CLIENTE que acessou via SITE,
 				para que você possa dar início ao atendimento do cliente...
 				==========================================================================================
 				""");
