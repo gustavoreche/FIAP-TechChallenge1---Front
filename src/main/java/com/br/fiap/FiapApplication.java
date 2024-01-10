@@ -9,6 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 
 import com.br.fiap.cliente.ClienteFront;
+import com.br.fiap.utils.FormularioUtils;
 import com.br.fiap.vendedor.VendedorFront;
 
 @EnableFeignClients
@@ -20,6 +21,9 @@ public class FiapApplication implements CommandLineRunner {
 	
 	@Autowired
 	private ClienteFront clienteFront;
+	
+	@Autowired
+	private FormularioUtils formularioUtils;
 
 	public static void main(String[] args) {
 		SpringApplication.run(FiapApplication.class, args);
@@ -27,14 +31,10 @@ public class FiapApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		System.out.println("""
-				=============================================================
-				Bem vindo ao sistema de CONSÓRCIO DE CARRO
-				=============================================================
-				""");
+		System.out.println(this.formularioBoasVindas());
 		var repeteFormulario = true;
 		while(repeteFormulario) {
-			System.out.println(formularioClienteOuVendedor());
+			System.out.println(this.formularioClienteOuVendedor());
 			System.out.print("Digite: ");
 			var entrada = new Scanner(System.in);
 			var opcaoDigitada = entrada.nextLine();
@@ -43,14 +43,17 @@ public class FiapApplication implements CommandLineRunner {
 			} else if(opcaoDigitada.equals("2")) {
 				this.vendedorFront.executa();
 			} else {
-				System.out.println("""
-						!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-						ATENÇAO!!!! Opção inválida, digite novamente!
-						
-						
-						""");
+				System.out.println(this.formularioUtils.formularioOpcaoInvalida());
 			}
 		}
+	}
+	
+	private String formularioBoasVindas() {
+		return """
+				=============================================================
+				Bem vindo ao sistema de CONSÓRCIO DE CARRO
+				=============================================================
+				""";
 	}
 	
 	private String formularioClienteOuVendedor() {
