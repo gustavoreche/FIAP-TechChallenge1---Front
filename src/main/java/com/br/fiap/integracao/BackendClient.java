@@ -22,7 +22,7 @@ public interface BackendClient {
 	@GetMapping(value = "/cliente/proximo-da-fila")
 	ClienteNaFilaDTO proximoClienteDaFila();
 	
-	@PostMapping(value = "/vendedor/registra-atendimento")
+	@PostMapping(value = "/atendimento")
 	@Headers("localAcessado: {localAcessado}")
 	void registraAtendimento(AtendimentoDTO request,
 			@RequestHeader("localAcessado") String localAcessado);
