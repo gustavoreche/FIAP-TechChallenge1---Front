@@ -1,10 +1,9 @@
 package com.br.fiap.cliente;
 
-public record CadastroClienteDTO (
+public record CadastroLeadDTO(
 		String nome,
 		String telefone,
 		String email,
 		String ano,
-		String modelo,
-		String categoria
+		String modelo
 ) {}

@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
-import com.br.fiap.cliente.CadastroClienteDTO;
+import com.br.fiap.cliente.CadastroLeadDTO;
 import com.br.fiap.integracao.BackendClient;
 
 import feign.FeignException;
@@ -34,24 +34,22 @@ public class FormularioUtils {
 		""";
 	}
 	
-	public CadastroClienteDTO cadastroCliente(String localAcessado) {
+	public CadastroLeadDTO cadastroLead() {
 		var entrada = new Scanner(System.in);
-		System.out.println(formularioFiltrosDeBuscaDoCarro());
-		System.out.print("Digite o ANO do carro ou aperte ENTER caso não seja prioridade. Exemplo: 2020, 2016: ");
-		var opcaoDigitada = entrada.nextLine();
-		var ano = opcaoDigitada;
-		System.out.print("Digite o MODELO do carro ou aperte ENTER caso não seja prioridade. Exemplo: Onix, Gol: ");
-		opcaoDigitada = entrada.nextLine();
-		var modelo = opcaoDigitada;
-		System.out.print("Digite a CATEGORIA ano do carro ou aperte ENTER caso não seja prioridade. Exemplo: SUV, Sedan: ");
-		opcaoDigitada = entrada.nextLine();
-		var categoria = opcaoDigitada;
-		System.out.println(formularioFiltrosSelecionados(ano, modelo, categoria));
-		
-		CadastroClienteDTO cadastroCliente = null;
+
+		CadastroLeadDTO cadastroLead = null;
 		var repeteFormulario = true;
 		while(repeteFormulario) {
-			System.out.println(formularioPreenchaInformacoes());
+			System.out.println(this.formularioFiltrosDeBuscaDoCarro());
+			System.out.print("Digite o ANO do carro. Exemplo: 2020, 2016: ");
+			var opcaoDigitada = entrada.nextLine();
+			var ano = opcaoDigitada;
+			System.out.print("Digite o MODELO do carro. Exemplo: Onix, Gol: ");
+			opcaoDigitada = entrada.nextLine();
+			var modelo = opcaoDigitada;
+			System.out.println(this.formularioFiltrosSelecionados(ano, modelo));
+
+			System.out.println(this.formularioPreenchaInformacoes());
 			System.out.print("Digite seu NOME: ");
 			opcaoDigitada = entrada.nextLine();
 			var nome = opcaoDigitada;
@@ -61,22 +59,22 @@ public class FormularioUtils {
 			System.out.print("Digite seu EMAIL: ");
 			opcaoDigitada = entrada.nextLine();
 			var email = opcaoDigitada;
-			cadastroCliente = new CadastroClienteDTO(
-					nome, telefone, email, ano, modelo, categoria
+			cadastroLead = new CadastroLeadDTO(
+					nome, telefone, email, ano, modelo
 					);
 			try {
-				this.client.cadastraCliente(cadastroCliente, localAcessado);
+				this.client.cadastraLead(cadastroLead);
 				repeteFormulario = false;
 			} catch (FeignException e) {
 				if(e.status() == HttpStatus.BAD_REQUEST.value()) {
-					System.out.println(formularioCadastroNaoRealizado(e.getMessage()));
+					System.out.println(this.formularioCadastroNaoRealizado(e.getMessage()));
 				} else {
-					System.out.println(formularioCadastroNaoRealizadoContateAdministrador(e.getMessage()));
+					System.out.println(this.formularioCadastroNaoRealizadoContateAdministrador(e.getMessage()));
 				}
 			}
 		
 		}
-		return cadastroCliente;
+		return cadastroLead;
 		
 	}
 	
@@ -96,15 +94,13 @@ public class FormularioUtils {
 	}
 	
 	private String formularioFiltrosSelecionados(String ano,
-			String modelo,
-			String categoria) {
+			String modelo) {
 		return """
 				
 				Os filtros selecionados são:
 				ano: %s
 				modelo: %s
-				categoria: %s
-			""".formatted(ano, modelo, categoria);
+			""".formatted(ano, modelo);
 	}
 	
 	private String formularioPreenchaInformacoes() {
