@@ -1,6 +1,6 @@
 package com.br.fiap.cliente;
 
-public record ClienteNaFilaDTO (
+public record LeadNaFilaDTO(
 		String nome,
 		String email,
 		String telefone,
