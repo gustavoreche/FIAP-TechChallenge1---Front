@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.br.fiap.cliente.AtendimentoDTO;
-import com.br.fiap.cliente.CadastroClienteDTO;
+import com.br.fiap.cliente.CadastroLeadDTO;
 import com.br.fiap.cliente.ClienteNaFilaDTO;
 import com.br.fiap.integracao.BackendClient;
 import com.br.fiap.utils.FormularioUtils;
@@ -86,13 +86,13 @@ public class VendedorFront {
 	}
 	
 	private void atendimentoPeloEstande() {
-		var dadosCliente = this.formularioUtils.cadastroCliente("ESTANDE");
+		var dadosCliente = this.formularioUtils.cadastroLead();
 		this.formularioUtils.formularioCadastroComSucesso();
 		this.registroDoAtendimento(dadosCliente);
 		//TODO: Enviar proposta
 	}
 	
-	private void registroDoAtendimento(CadastroClienteDTO dadosCliente) {
+	private void registroDoAtendimento(CadastroLeadDTO dadosCliente) {
 		var entrada = new Scanner(System.in);
 		System.out.println(formularioRegistrandoAtendimento());
 		try {
@@ -107,9 +107,8 @@ public class VendedorFront {
 	private String formularioInicioVendedor() {
 		return """
 				------------------------------------------------------------------------
-				VENDEDOR, digite qual operação você quer realizar:
-					1 - Acesso ao SITE
-					2 - Realizar atendimento no ESTANDE
+				VENDEDOR, bem-vindo ao SITE
+				------------------------------------------------------------------------
 				""";
 	}
 	

@@ -5,17 +5,15 @@ public record ClienteNaFilaDTO (
 		String email,
 		String telefone,
 		String anoFiltroDeBusca,
-		String modeloFiltroDeBusca,
-		String categoriaFiltroDeBusca
+		String modeloFiltroDeBusca
 ) {
 
-	public CadastroClienteDTO converteEmCadastro() {
-		return new CadastroClienteDTO(
+	public CadastroLeadDTO converteEmCadastro() {
+		return new CadastroLeadDTO(
 				nome, 
 				telefone, 
 				email, 
 				anoFiltroDeBusca, 
-				modeloFiltroDeBusca, 
-				categoriaFiltroDeBusca
+				modeloFiltroDeBusca
 				);
 	}}

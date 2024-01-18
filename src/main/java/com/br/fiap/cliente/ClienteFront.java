@@ -17,19 +17,19 @@ public class ClienteFront {
 	@Autowired
 	private FormularioUtils formularioUtils;
 	
-	private CadastroClienteDTO cadastroCliente;
+	private CadastroLeadDTO cadastroCliente;
 	
 	public void executa() {
-		System.out.println(formularioInicioCliente());
+		System.out.println(this.formularioInicioCliente());
 		var repeteFormulario = true;
 		while(repeteFormulario) {
 			System.out.print("Digite: ");
 			var entrada = new Scanner(System.in);
 			var opcaoDigitada = entrada.nextLine();
 			if(opcaoDigitada.equals("1")) {
-				this.formularioUtils.cadastroCliente("SITE");
+				this.formularioUtils.cadastroLead();
 				this.formularioUtils.formularioCadastroComSucesso();
-				System.out.println(formularioInseridoNoSistema());
+				System.out.println(this.formularioInseridoNoSistema());
 				repeteFormulario = false;
 			} else if(opcaoDigitada.equals("2")) {
 				//TODO: Verificar proposta
