@@ -1,15 +1,13 @@
 package com.br.fiap.utils;
 
-import java.util.Scanner;
-
+import com.br.fiap.cliente.CadastroLeadDTO;
+import com.br.fiap.integracao.BackendClient;
+import feign.FeignException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
-import com.br.fiap.cliente.CadastroLeadDTO;
-import com.br.fiap.integracao.BackendClient;
-
-import feign.FeignException;
+import java.util.Scanner;
 
 @Component
 public class FormularioUtils {
@@ -19,7 +17,7 @@ public class FormularioUtils {
 	
 	public void tempoDeEspera() {
 		try {
-			Thread.sleep(3000);
+			Thread.sleep(2000);
 		} catch (InterruptedException e1) {
 			e1.printStackTrace();
 		}

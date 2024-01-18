@@ -7,8 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.br.fiap.cliente.AtendimentoDTO;
-import com.br.fiap.cliente.CadastroLeadDTO;
-import com.br.fiap.cliente.ClienteNaFilaDTO;
+import com.br.fiap.cliente.LeadNaFilaDTO;
 import com.br.fiap.integracao.BackendClient;
 import com.br.fiap.utils.FormularioUtils;
 
@@ -25,37 +24,22 @@ public class VendedorFront {
 	
 	public void executa() {
 		System.out.println(this.formularioInicioVendedor());
-		var repeteFormulario = true;
-		while(repeteFormulario) {
-			System.out.print("Digite: ");
-			var entrada = new Scanner(System.in);
-			var opcaoDigitada = entrada.nextLine();
-			if(opcaoDigitada.equals("1")) {
-				this.atendimentoPeloSite();
-				repeteFormulario = false;
-			} else if(opcaoDigitada.equals("2")) {
-				this.atendimentoPeloEstande();
-				repeteFormulario = false;
-			} else {
-				System.out.println(this.formularioUtils.formularioOpcaoInvalida());
-			}
-		}
-		
+		this.realizaAtendimento();
 	}
 
-	private void atendimentoPeloSite() {
+	private void realizaAtendimento() {
 		System.out.println(this.formularioInicioAtendimentoSite());
 		this.formularioUtils.tempoDeEspera();
-		ClienteNaFilaDTO proximoClienteNaFila = null;
+		LeadNaFilaDTO proximoLeadNaFila = null;
 		try {
-			proximoClienteNaFila = this.client.proximoClienteDaFila();
+			proximoLeadNaFila = this.client.proximoLeadDaFila();
 		} catch (FeignException e) {
 			System.out.println(this.formularioConsultaNaoRealizada(e.getMessage()));
 		}
-		if(Objects.isNull(proximoClienteNaFila)) {
-			System.out.println(this.formularioSemClienteNaFila());
+		if(Objects.isNull(proximoLeadNaFila)) {
+			System.out.println(this.formularioSemLeadNaFila());
 		} else {
-			System.out.println(this.formularioClienteNaFila(proximoClienteNaFila.nome(), proximoClienteNaFila.email()));
+			System.out.println(this.formularioLeadNaFila(proximoLeadNaFila.nome()));
 			System.out.println(this.formularioDesejaIniciarAtendimento());
 			var repeteFormulario = true;
 			while(repeteFormulario) {
@@ -68,38 +52,19 @@ public class VendedorFront {
 					var nome = entrada.nextLine();
 					
 					try {
-						this.client.registraAtendimento(new AtendimentoDTO(nome, proximoClienteNaFila.converteEmCadastro()), "SITE");
+						this.client.registraAtendimento(new AtendimentoDTO(nome, proximoLeadNaFila.converteEmCadastro()));
 						System.out.println(this.formularioAtendimentoRegistrado());
 					} catch (FeignException e) {
 						System.out.println(formularioAtendimentoNaoRegistrado(e.getMessage()));
 					}
 					repeteFormulario = false;
 				} else if(opcaoDigitada.equals("2")) {
-					System.out.println(formularioVolteAoEstande());
+					System.out.println(formularioVolteMaisTarde());
 					repeteFormulario = false;
 				} else {
 					System.out.println(this.formularioUtils.formularioOpcaoInvalida());
 				}
 			}
-		}
-		
-	}
-	
-	private void atendimentoPeloEstande() {
-		var dadosCliente = this.formularioUtils.cadastroLead();
-		this.formularioUtils.formularioCadastroComSucesso();
-		this.registroDoAtendimento(dadosCliente);
-		//TODO: Enviar proposta
-	}
-	
-	private void registroDoAtendimento(CadastroLeadDTO dadosCliente) {
-		var entrada = new Scanner(System.in);
-		System.out.println(formularioRegistrandoAtendimento());
-		try {
-			this.client.registraAtendimento(new AtendimentoDTO("vendedor do ESTANDE", dadosCliente), "ESTANDE");
-			System.out.println(this.formularioAtendimentoRegistrado());
-		} catch (FeignException e) {
-			System.out.println(this.formularioAtendimentoNaoRegistrado(e.getMessage()));
 		}
 		
 	}
@@ -119,8 +84,8 @@ public class VendedorFront {
 				Simulando que o VENDEDOR esteja acessando o atendimento pelo SITE...
 				
 				==========================================================================================
-				Estamos verificando se existe algum CLIENTE que acessou via SITE,
-				para que você possa dar início ao atendimento do cliente...
+				Estamos verificando se existe algum LEAD que acessou via SITE,
+				para que você possa dar início ao atendimento do lead...
 				==========================================================================================
 				""";
 	}
@@ -137,25 +102,23 @@ public class VendedorFront {
 						""".formatted(erro);
 	}
 	
-	private String formularioSemClienteNaFila() {
+	private String formularioSemLeadNaFila() {
 		return """
-				Por enquanto nenhum CLIENTE esta na fila...
+				Por enquanto nenhum LEAD esta na fila...
 				
-				Fique atento ao atendimento no ESTANDE, verifique após 15 minutos!!
+				Verifique após 15 minutos!!
 				=============================================================================
 				""";
 	}
 	
-	private String formularioClienteNaFila(String nome,
-			String email) {
+	private String formularioLeadNaFila(String nome) {
 		return """
-				CLIENTE encontrado...
+				LEAD encontrado...
 				
-				Dados do cliente: 
+				Dados do lead: 
 					nome: %s
-					email: %s
 				=============================================================================
-				""".formatted(nome, email);
+				""".formatted(nome);
 	}
 	
 	private String formularioDesejaIniciarAtendimento() {
@@ -195,20 +158,13 @@ public class VendedorFront {
 						""".formatted(erro);
 	}
 	
-	private String formularioVolteAoEstande() {
+	private String formularioVolteMaisTarde() {
 		return """
 				............................................................
 				............................................................
-				Tudo bem... Volte ao ESTANDE
+				Tudo bem... Volte mais tarde
 				............................................................
 				............................................................
-				""";
-	}
-	
-	private String formularioRegistrandoAtendimento() {
-		return """
-				Estamos registrando o ATENDIMENTO. Aguarde...
-				-----------------------------------------------------------------------------------
 				""";
 	}
 	
