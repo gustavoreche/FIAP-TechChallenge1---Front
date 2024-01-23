@@ -52,7 +52,7 @@ public class ClienteFront {
 				
 				Digite qual opção você quer acessar:
 					1 - Solicitar atendimento
-					2 - Verificar proposta
+					2 - Simular que você recebeu o LINK da PROPOSTA
 				""";
 	}
 	
