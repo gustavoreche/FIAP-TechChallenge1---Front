@@ -3,9 +3,10 @@ package com.br.fiap.integracao;
 import com.br.fiap.cliente.AtendimentoDTO;
 import com.br.fiap.cliente.CadastroLeadDTO;
 import com.br.fiap.cliente.LeadNaFilaDTO;
+import com.br.fiap.cliente.ValorDaPropostaDTO;
+import feign.Param;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 @FeignClient(name = "backend", url = "http://localhost:8080")
 public interface BackendClient {
@@ -17,6 +18,9 @@ public interface BackendClient {
 	LeadNaFilaDTO proximoLeadDaFila();
 	
 	@PostMapping(value = "/atendimento")
-	void registraAtendimento(AtendimentoDTO request);
+	Long registraAtendimento(AtendimentoDTO request);
+
+	@PutMapping(value = "/atendimento/envia-proposta/{atendimentoId}")
+	String enviaProposta(@PathVariable(value = "atendimentoId") Long atendimentoId, ValorDaPropostaDTO request);
 
 }
