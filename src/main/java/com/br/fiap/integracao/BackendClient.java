@@ -22,6 +22,9 @@ public interface BackendClient {
 	@PutMapping(value = "/atendimento/envia-proposta/{atendimentoId}")
 	String enviaProposta(@PathVariable(value = "atendimentoId") Long atendimentoId, ValorDaPropostaDTO request);
 
+	@PutMapping(value = "/atendimento/recusa-proposta/{atendimentoId}")
+	void recusaProposta(@PathVariable(value = "atendimentoId") Long atendimentoId);
+
 	@GetMapping(value = "/atendimento/proposta/{nome}/{email}")
 	InformaPropostaDTO pegaProposta(@PathVariable(value = "nome") String nome,
 									@PathVariable(value = "email") String email);
