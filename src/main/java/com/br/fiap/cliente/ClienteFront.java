@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Scanner;
@@ -23,11 +24,13 @@ public class ClienteFront {
 	private FormularioUtils formularioUtils;
 	
 	private CadastroLeadDTO cadastroCliente;
+
+	private boolean encerraAtendimento = false;
 	
 	public void executa() {
-		System.out.println(this.formularioInicioCliente());
 		var repeteFormulario = true;
 		while(repeteFormulario) {
+			System.out.println(this.formularioInicioCliente());
 			System.out.print("Digite: ");
 			var entrada = new Scanner(System.in);
 			var opcaoDigitada = entrada.nextLine();
@@ -38,7 +41,9 @@ public class ClienteFront {
 				repeteFormulario = false;
 			} else if(opcaoDigitada.equals("2")) {
 				this.buscaLead();
-				repeteFormulario = false;
+				if(this.encerraAtendimento){
+					repeteFormulario = false;
+				}
 			} else {
 				System.out.println(this.formularioUtils.formularioOpcaoInvalida());
 			}
@@ -176,11 +181,11 @@ public class ClienteFront {
 			var email = opcaoDigitada;
 
 			try {
-				var valorDaProposta = this.client.pegaProposta(nome, email);
-				if(Objects.isNull(valorDaProposta)) {
-					System.out.println(this.formularioClienteNaoEncontrado());
+				var proposta = this.client.pegaProposta(nome, email);
+				if(Objects.isNull(proposta)) {
+					System.out.println(this.formularioPropostaNaoEncontrada());
 				} else {
-					this.aceiteOuRecusaDaProposta(nome, email, valorDaProposta);
+					this.aceiteOuRecusaDaProposta(nome, email, proposta);
 				}
 				repeteFormulario = false;
 			} catch (FeignException e) {
@@ -193,8 +198,8 @@ public class ClienteFront {
 
 	private void aceiteOuRecusaDaProposta(String nome,
 										  String email,
-										  InformaPropostaDTO valorDaProposta) {
-		System.out.println(this.formularioExibeValorDaProposta(valorDaProposta.valorDaProposta()));
+										  InformaPropostaDTO proposta) {
+		System.out.println(this.formularioExibeValorDaProposta(proposta.valorDaProposta()));
 		System.out.println(this.formularioAceitaOuRecusaDaProposta());
 		var repeteFormulario = true;
 		while(repeteFormulario) {
@@ -202,11 +207,10 @@ public class ClienteFront {
 			var entrada = new Scanner(System.in);
 			var opcaoDigitada = entrada.nextLine();
 			if (opcaoDigitada.equals("1")) {
-				this.preencheContrato(nome, email, valorDaProposta);
+				this.preencheContrato(nome, email, proposta);
 				repeteFormulario = false;
 			} else if (opcaoDigitada.equals("2")) {
-				//TODO: RECUSOU
-//				System.out.println(this.formularioVolteMaisTarde());
+				this.fluxoRefazerAtendimento(proposta.idAtendimento());
 				repeteFormulario = false;
 			} else {
 				System.out.println(this.formularioUtils.formularioOpcaoInvalida());
@@ -309,12 +313,12 @@ public class ClienteFront {
 						""".formatted(erro);
 	}
 
-	private String formularioClienteNaoEncontrado() {
+	private String formularioPropostaNaoEncontrada() {
 		return """
     
     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     
-    CLIENTE NÃO ENCONTRADO
+    PROPOSTA NÃO ENCONTRADA
     
     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     """;
@@ -350,6 +354,104 @@ public class ClienteFront {
 				CONTRATO realizado!!
 				!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 				""";
+	}
+
+	private void fluxoRefazerAtendimento(Long idAtendimento) {
+		this.recusaAtendimento(idAtendimento);
+
+		System.out.println(this.formularioDesejaNovoAtendimento());
+		var repeteFormulario = true;
+		while(repeteFormulario) {
+			System.out.print("Digite: ");
+			var entrada = new Scanner(System.in);
+			var opcaoDigitada = entrada.nextLine();
+			if(opcaoDigitada.equals("1")) {
+				System.out.println(this.formularioRecomecarAtendimento());
+				repeteFormulario = false;
+			} else if(opcaoDigitada.equals("2")) {
+				System.out.println(this.formularioRecusaAtendimento());
+				this.encerraAtendimento = true;
+				repeteFormulario = false;
+			} else {
+				System.out.println(this.formularioUtils.formularioOpcaoInvalida());
+			}
+		}
+	}
+
+	private void recusaAtendimento(Long idAtendimento) {
+		try {
+			this.client.recusaProposta(idAtendimento);
+			System.out.println(this.formularioPropostaRecusada());
+		} catch (FeignException e) {
+			if(e.status() == HttpStatus.BAD_REQUEST.value()) {
+				System.out.println(this.formularioRecusaDaPropostaNaoRealizada(e.getMessage()));
+			} else {
+				System.out.println(this.formularioRecusaDaPropostaNaoRealizadaContateAdministrador(e.getMessage()));
+			}
+		}
+	}
+
+	private String formularioDesejaNovoAtendimento() {
+		return """
+				------------------------------------------------------------------------
+				Que pena que você RECUSOU a nossa proposta...
+				------------------------------------------------------------------------
+				
+				Você, deseja iniciar um novo atendimento? (Lembrando que você irá nos fornecer
+				todas as informações novamente, como suas preferências e suas informações pessoais)
+				
+				Iniciar um novo atendimento?
+					1 - SIM
+					2 - NÃO
+				""";
+	}
+
+	private String formularioRecomecarAtendimento(){
+		return """
+      
+      MARAVILHA!!!!!!!!!!!! Iremos recomeçar novamente o atendimento...
+      
+      """;
+	}
+
+	private String formularioRecusaAtendimento() {
+		return """
+      ........................................................................................
+      Certo, muito obrigado por utilizar nosso sistema! Até breve
+      ........................................................................................
+      """;
+	}
+
+	private String formularioPropostaRecusada() {
+		return """
+				!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+				PROPOSTA recusada!!
+				!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+				""";
+	}
+
+	private String formularioRecusaDaPropostaNaoRealizada(String erro) {
+		return """
+				!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+				RECUSA DA PROPOSTA NÃO REALIZADA.
+				
+				Motivo: %s
+				
+				Tente novamente
+				!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+						""".formatted(erro);
+	}
+
+	private String formularioRecusaDaPropostaNaoRealizadaContateAdministrador(String erro) {
+		return """
+				!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+				RECUSA DA PROPOSTA NÃO REALIZADA.
+				
+				Motivo: %s
+				
+				CONTATE UM ADMINISTRADOR DO SISTEMA
+				!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+						""".formatted(erro);
 	}
 
 }

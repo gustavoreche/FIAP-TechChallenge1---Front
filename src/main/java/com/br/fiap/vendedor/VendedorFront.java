@@ -122,7 +122,7 @@ public class VendedorFront {
 				LEAD encontrado...
 				
 				Dados do LEAD:
-					nomeVendedor: %s
+					nome: %s
 				=============================================================================
 				""".formatted(nome);
 	}
