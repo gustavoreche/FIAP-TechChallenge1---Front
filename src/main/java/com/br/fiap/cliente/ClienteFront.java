@@ -155,6 +155,13 @@ public class ClienteFront {
 						""".formatted(erro);
 	}
 
+	private String formularioContrato() {
+		return """
+				-----------------------------------------------------------
+				Digite alguns dados para montarmos o CONTRATO:
+				""";
+	}
+
 	public void buscaLead() {
 		var entrada = new Scanner(System.in);
 
@@ -214,7 +221,7 @@ public class ClienteFront {
 
 		var repeteFormulario = true;
 		while(repeteFormulario) {
-			System.out.println(this.formularioFiltrosDeBuscaDoCarro());
+			System.out.println(this.formularioContrato());
 			System.out.print("Digite seu CPF. Exemplo: 81528330021: ");
 			var opcaoDigitada = entrada.nextLine();
 			var cpf = opcaoDigitada;
