@@ -204,7 +204,7 @@ public class VendedorFront {
 
 	private void confirmaValorDaProposta(Long atendimentoId) {
 		BigDecimal valorDaProposta = BigDecimal.valueOf(
-				new Random(5).nextDouble() * 50_000
+				new Random().nextDouble() * 50_000
 				).setScale(2, RoundingMode.HALF_UP);
 		System.out.println(this.formularioConfirmaValorDaProposta(valorDaProposta));
 		var repeteFormulario = true;
